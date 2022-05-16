@@ -2,6 +2,8 @@ package com.example.batch.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
@@ -13,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 public class JsonFileReader implements StepExecutionListener, ItemReader<JsonNode> {
+    private final Logger logger = LoggerFactory.getLogger(JsonFileReader.class);
 
     private BufferedReader reader;
 
@@ -24,6 +27,7 @@ public class JsonFileReader implements StepExecutionListener, ItemReader<JsonNod
         if (file.matches("^file:(.*)"))
             file = file.substring(file.indexOf(":") + 1);
         this.fileName = file;
+        System.out.println("JsonFileReader: " + file);
     }
 
     private void initReader() throws FileNotFoundException {
@@ -33,6 +37,7 @@ public class JsonFileReader implements StepExecutionListener, ItemReader<JsonNod
 
     @Override
     public void beforeStep(StepExecution stepExecution) {
+        logger.info("before Step");
     }
 
     @Override
@@ -42,6 +47,7 @@ public class JsonFileReader implements StepExecutionListener, ItemReader<JsonNod
 
     @Override
     public JsonNode read() throws Exception {
+        logger.info("read");
         if (objectMapper == null)
             objectMapper = new ObjectMapper();
 
@@ -49,10 +55,11 @@ public class JsonFileReader implements StepExecutionListener, ItemReader<JsonNod
             initReader();
         }
 
-        String line = reader.readLine();
 
+        String line = reader.readLine();
+        System.out.println(line);
         if (line != null)
-            return objectMapper.readTree(reader.readLine());
+            return objectMapper.readTree(line);
         else
             return null;
     }

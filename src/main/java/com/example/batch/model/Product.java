@@ -9,6 +9,7 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Product {
 
+
     private String main_cat;
 
     private String title;
@@ -16,6 +17,10 @@ public class Product {
     private String asin;
 
     private List<String> category;
+
+    private String price;
+
+
 
     private List<String> imageURLHighRes;
 }

@@ -10,19 +10,24 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.json.JsonItemReader;
+import org.springframework.batch.item.json.builder.JsonFileItemWriterBuilder;
+import org.springframework.batch.item.json.builder.JsonItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 
 @Configuration
 @EnableBatchProcessing
-public class BatchConfig {
+public class   BatchConfig {
 
 
     @Autowired
@@ -34,8 +39,17 @@ public class BatchConfig {
 
     @Bean
     public ItemReader<JsonNode> itemReader() {
-        return new JsonFileReader("/home/java/meta_Clothing_Shoes_and_Jewelry.json");
+
+        /*return new JsonItemReaderBuilder<Product>()
+                .name("productItemReader")
+                .resource(new ClassPathResource("data/meta_Magazine_Subscriptions_100.json"))
+                .build();*/
+        System.out.println(this.getClass().getClassLoader().
+                getResource("data/meta_Magazine_Subscriptions_100.json").getFile());
+        return new JsonFileReader(this.getClass().getClassLoader().
+                getResource("data/meta_Magazine_Subscriptions_100.json").getFile());
     }
+
 
     @Bean
     public ItemProcessor<JsonNode, Product> itemProcessor() {
@@ -61,6 +75,7 @@ public class BatchConfig {
     public Job chunksJob() {
         return jobBuilderFactory
                 .get("chunksJob")
+                .incrementer(new RunIdIncrementer())
                 .start(processProducts(itemReader(), itemProcessor(), itemWriter()))
                 .build();
     }
