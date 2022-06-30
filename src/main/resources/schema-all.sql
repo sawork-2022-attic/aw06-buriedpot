@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS `products`;
 
 CREATE TABLE `products`  (
                          id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-                         name VARCHAR(100),
+                         name VARCHAR(1000),
                          price DOUBLE(16,2),
                          image VARCHAR (100)
 );

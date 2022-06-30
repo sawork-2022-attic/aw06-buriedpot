@@ -45,9 +45,9 @@ public class   BatchConfig {
                 .resource(new ClassPathResource("data/meta_Magazine_Subscriptions_100.json"))
                 .build();*/
         System.out.println(this.getClass().getClassLoader().
-                getResource("data/meta_Magazine_Subscriptions_100.json").getFile());
+                getResource("data/meta_Gift_Cards.json").getFile());
         return new JsonFileReader(this.getClass().getClassLoader().
-                getResource("data/meta_Magazine_Subscriptions_100.json").getFile());
+                getResource("data/meta_Gift_Cards.json").getFile());
     }
 
 
